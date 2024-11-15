@@ -74,20 +74,20 @@ export default function Dashboard() {
         <table className="min-w-full border border-gray-700">
           <thead>
             <tr className="bg-gray-800">
-              <th className="px-4 py-2 text-left text-gray-300 font-medium">
+              <th className="px-4 py-2 text-left text-gray-300 font-medium cursor-pointer">
                 No.
               </th>
-              <th className="px-4 py-2 text-left text-gray-300 font-medium">
+              <th className="px-4 py-2 text-left text-gray-300 font-medium cursor-pointer">
                 ID
               </th>
-              <th className="px-4 py-2 text-left text-gray-300 font-medium">
+              <th className="px-4 py-2 text-left text-gray-300 font-medium cursor-pointer">
                 Original URL
               </th>
-              <th className="px-4 py-2 text-left text-gray-300 font-medium">
+              <th className="px-4 py-2 text-left text-gray-300 font-medium cursor-pointer">
                 Short Code
               </th>
               <th
-                className="px-4 py-2 text-left text-white font-medium"
+                className="px-4 py-2 text-left text-white font-medium flex items-center space-x-1 cursor-pointer"
                 onClick={handleSortByClicks}
               >
                 Clicks {sortOrder === "asc" ? "↑" : "↓"}
