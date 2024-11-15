@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -17,12 +17,15 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 10;
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get<DataRecord[]>("http://localhost:5001/");
+        const response = await axios.get<DataRecord[]>(
+          "http://localhost:5001/"
+        );
         setData(response.data);
       } catch (err) {
         setError("Failed to load data");
@@ -50,6 +53,18 @@ export default function Dashboard() {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
+  const handleSortByClicks = () => {
+    const sortedData = [...data].sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.clicks - b.clicks;
+      } else {
+        return b.clicks - a.clicks;
+      }
+    });
+    setData(sortedData);
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
   return (
     <section className="bg-black min-h-screen p-8">
       <div className="text-center mb-6">
@@ -59,19 +74,38 @@ export default function Dashboard() {
         <table className="min-w-full border border-gray-700">
           <thead>
             <tr className="bg-gray-800">
-              <th className="px-4 py-2 text-left text-gray-300 font-medium">No.</th>
-              <th className="px-4 py-2 text-left text-gray-300 font-medium">ID</th>
-              <th className="px-4 py-2 text-left text-gray-300 font-medium">Original URL</th>
-              <th className="px-4 py-2 text-left text-gray-300 font-medium">Short Code</th>
-              <th className="px-4 py-2 text-left text-gray-300 font-medium">Clicks</th>
-              <th className="px-4 py-2 text-left text-gray-300 font-medium">Created At</th>
-              <th className="px-4 py-2 text-left text-gray-300 font-medium">Updated At</th>
+              <th className="px-4 py-2 text-left text-gray-300 font-medium">
+                No.
+              </th>
+              <th className="px-4 py-2 text-left text-gray-300 font-medium">
+                ID
+              </th>
+              <th className="px-4 py-2 text-left text-gray-300 font-medium">
+                Original URL
+              </th>
+              <th className="px-4 py-2 text-left text-gray-300 font-medium">
+                Short Code
+              </th>
+              <th
+                className="px-4 py-2 text-left text-white font-medium"
+                onClick={handleSortByClicks}
+              >
+                Clicks {sortOrder === "asc" ? "↑" : "↓"}
+              </th>
+              <th className="px-4 py-2 text-left text-gray-300 font-medium">
+                Created At
+              </th>
+              <th className="px-4 py-2 text-left text-gray-300 font-medium">
+                Updated At
+              </th>
             </tr>
           </thead>
           <tbody>
             {currentData.map((record, index) => (
               <tr key={record._id} className="border-t border-gray-700">
-                <td className="px-4 py-2 text-gray-400">{firstItemIndex + index + 1}</td>
+                <td className="px-4 py-2 text-gray-400">
+                  {firstItemIndex + index + 1}
+                </td>
                 <td className="px-4 py-2 text-gray-400">{record._id}</td>
                 <td className="px-4 py-2">
                   <a
@@ -102,7 +136,9 @@ export default function Dashboard() {
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
           className={`px-4 py-2 rounded-md ${
-            currentPage === 1 ? "bg-gray-700 text-gray-500" : "bg-blue-500 text-white hover:bg-blue-600"
+            currentPage === 1
+              ? "bg-gray-700 text-gray-500"
+              : "bg-blue-500 text-white hover:bg-blue-600"
           }`}
         >
           Previous
@@ -114,7 +150,9 @@ export default function Dashboard() {
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
           className={`px-4 py-2 rounded-md ${
-            currentPage === totalPages ? "bg-gray-700 text-gray-500" : "bg-blue-500 text-white hover:bg-blue-600"
+            currentPage === totalPages
+              ? "bg-gray-700 text-gray-500"
+              : "bg-blue-500 text-white hover:bg-blue-600"
           }`}
         >
           Next
