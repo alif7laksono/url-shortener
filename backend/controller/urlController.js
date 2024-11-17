@@ -81,17 +81,22 @@ export const shortenUrl = async (req, res) => {
 
 // Redirect to the original URL based on shortCode
 export const redirectToOriginalUrl = async (req, res) => {
+    console.log("Request params", req.params)
     const { shortCode } = req.params;
     try {
+        // Find the URL document based on the short code, not the _id field
         const urlDoc = await Url.findOne({ shortCode });
+        console.log(urlDoc);
 
         if (!urlDoc) {
             return res.status(404).send('Short URL not found');
         }
 
+        // Increment the click count
         urlDoc.clicks += 1;
         await urlDoc.save();
 
+        // Redirect to the original URL
         return res.redirect(urlDoc.originalUrl);
     } catch (error) {
         console.error(error);
